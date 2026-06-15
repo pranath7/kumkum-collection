@@ -280,7 +280,7 @@ ${imgUrl}`;
           <div className="hero-glow"></div>
           <div className="hero-container">
             <div className="hero-content">
-              <p className="hero-tagline">✨ Premium Quality Ornaments</p>
+              <p className="hero-tagline">✨ Best Imitation Jewellery in Chennai</p>
               <h1 className="hero-title">
                 Crafted to Shine.<br />
                 Designed to <span>Inspire.</span>
@@ -475,7 +475,7 @@ ${imgUrl}`;
               <p className="section-subtitle">Heritage and Passion</p>
               <h2 className="story-title">The Art of <span>Matte Gold Finishing</span></h2>
               <p className="story-text">
-                Nestled in the bustling heart of Mint Street, Chennai, Kumkum Collection has established a reputation for crafting premium imitation ornaments that represent royal heritage. Our artisans specialize in creating detailed temple motifs, goddess carvings, and peacock patterns set with authentic Kempu stones.
+                Nestled in the bustling heart of Mint Street, Sowcarpet, Kumkum Creation is your premier source for exquisite imitation jewellery in Chennai. Our boutique has established a reputation for crafting premium ornaments that represent royal heritage. Our artisans specialize in creating detailed temple motifs, goddess carvings, and peacock patterns set with authentic Kempu stones.
               </p>
               <p className="story-text">
                 Every American Diamond (AD) stone and cubic zirconia is carefully bezel-set on a sturdy brass alloy base, finished with our signature matte gold plating. The result is a piece of jewelry that carries the heavy weight, rich luster, and exquisite detail of genuine heritage gold at a fraction of the cost.
