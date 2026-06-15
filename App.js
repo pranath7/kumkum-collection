@@ -245,7 +245,7 @@ ${imgUrl}`;
                 Our Story
               </span>
             </li>
-            <li>
+            <li className="hide-mobile">
               <span 
                 className="nav-link"
                 onClick={() => { document.getElementById('locator').scrollIntoView({ behavior: 'smooth' }); }}

@@ -1409,6 +1409,12 @@ h1, h2, h3, h4 {
     flex-direction: column;
     gap: 1.25rem;
   }
+  .nav-links {
+    gap: 1rem;
+  }
+  .hide-mobile {
+    display: none !important;
+  }
   .logo-text {
     font-size: 1.6rem;
   }
