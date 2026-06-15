@@ -248,6 +248,7 @@ const server = http.createServer((req, res) => {
               price: newProduct.price.toString(),
               description: newProduct.description || '',
               image: newProduct.image,
+              images: newProduct.images || [newProduct.image],
               createdAt: new Date().toISOString()
             };
 
@@ -300,7 +301,6 @@ const server = http.createServer((req, res) => {
               return;
             }
 
-            // Update product (keep original ID and createdAt)
             products[productIndex] = {
               ...products[productIndex],
               code: updatedProduct.code,
@@ -308,7 +308,8 @@ const server = http.createServer((req, res) => {
               category: updatedProduct.category || 'New Arrivals',
               price: updatedProduct.price.toString(),
               description: updatedProduct.description || '',
-              image: updatedProduct.image
+              image: updatedProduct.image,
+              images: updatedProduct.images || [updatedProduct.image]
             };
 
             fs.writeFile(DB_FILE, JSON.stringify(products, null, 2), err => {

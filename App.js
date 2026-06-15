@@ -57,6 +57,7 @@ window.App = function App() {
   const [loading, setLoading] = useState(true);
   const [categoryFilter, setCategoryFilter] = useState('All');
   const [selectedProduct, setSelectedProduct] = useState(null);
+  const [activeImageIndex, setActiveImageIndex] = useState(0);
   
   // New States: Search and FAQ
   const [searchTerm, setSearchTerm] = useState('');
@@ -102,6 +103,10 @@ window.App = function App() {
   };
 
   useEffect(() => {
+    setActiveImageIndex(0);
+  }, [selectedProduct]);
+
+  useEffect(() => {
     if (isConfigured && db) {
       // Live Cloud Firestore Database Subscription with Auto-Seeding
       const unsubscribe = db.collection("products").orderBy("createdAt", "desc").onSnapshot(
@@ -116,6 +121,11 @@ window.App = function App() {
                 price: "3499",
                 description: "Exquisite luxury Kundan choker necklace adorned with radiant ruby emerald stones and detailed pearl drop hanging strings. Includes a pair of matching royal jhumka earrings. Perfect for bridal and wedding wear.",
                 image: "./public/images/kundan_necklace.png",
+                images: [
+                  "./public/images/kundan_necklace.png",
+                  "./public/images/bridal_combo.png",
+                  "./public/images/ruby_choker.png"
+                ],
                 createdAt: new Date(Date.now() - 5000).toISOString()
               },
               {
@@ -125,6 +135,7 @@ window.App = function App() {
                 price: "4999",
                 description: "Grand traditional South Indian wedding combo set featuring a long royal haram necklace, a matching medium choker necklace, matching grand jhumka earrings, and a maang tikka. Beautiful premium matte gold finishing.",
                 image: "./public/images/bridal_combo.png",
+                images: ["./public/images/bridal_combo.png"],
                 createdAt: new Date(Date.now() - 4000).toISOString()
               },
               {
@@ -134,6 +145,7 @@ window.App = function App() {
                 price: "1899",
                 description: "Stunning premium quality American Diamond (AD) stone choker necklace featuring royal ruby red center stones, crafted on a brilliant silver-plated base. Comes with matching sparkling stud earrings.",
                 image: "./public/images/ruby_choker.png",
+                images: ["./public/images/ruby_choker.png"],
                 createdAt: new Date(Date.now() - 3000).toISOString()
               },
               {
@@ -143,6 +155,7 @@ window.App = function App() {
                 price: "1299",
                 description: "Set of four royal antique gold plated bangles with exquisite handcrafted filigree details, accented with small ruby and emerald green stone placements. Ideal for pairing with sarees and ethnic wear.",
                 image: "./public/images/antique_bangles.png",
+                images: ["./public/images/antique_bangles.png"],
                 createdAt: new Date(Date.now() - 2000).toISOString()
               },
               {
@@ -152,6 +165,7 @@ window.App = function App() {
                 price: "899",
                 description: "Sparkling contemporary American Diamond (AD) jhumka earrings featuring royal pearl drop embellishments. Designed to capture and reflect light at every angle, adding premium brilliance to your look.",
                 image: "./public/images/ad_earrings.png",
+                images: ["./public/images/ad_earrings.png"],
                 createdAt: new Date(Date.now() - 1000).toISOString()
               }
             ];
@@ -602,7 +616,62 @@ Please let me know if it is available!`;
               </button>
 
               <div className="modal-image-side">
-                <img src={selectedProduct.image} alt={selectedProduct.name} />
+                {(() => {
+                  const images = Array.isArray(selectedProduct.images) && selectedProduct.images.length > 0 
+                    ? selectedProduct.images 
+                    : [selectedProduct.image];
+                  const currentImage = images[activeImageIndex] || selectedProduct.image;
+                  
+                  return (
+                    <div className="modal-slider-container" style={{ position: 'relative', width: '100%', display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+                      <div className="modal-main-image-wrapper" style={{ position: 'relative', width: '100%', height: '360px', display: 'flex', alignItems: 'center', justifyContent: 'center', background: '#000', borderRadius: '8px', overflow: 'hidden' }}>
+                        <img src={currentImage} alt={selectedProduct.name} style={{ width: '100%', height: '100%', objectFit: 'contain' }} />
+                        
+                        {images.length > 1 && (
+                          <>
+                            <button 
+                              onClick={() => setActiveImageIndex((activeImageIndex - 1 + images.length) % images.length)}
+                              style={{ position: 'absolute', left: '10px', top: '50%', transform: 'translateY(-50%)', background: 'rgba(0,0,0,0.6)', border: '1px solid var(--border-gold)', color: 'var(--color-gold)', width: '36px', height: '36px', borderRadius: '50%', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '1.2rem', transition: 'var(--transition-smooth)', zIndex: 5 }}
+                              className="slider-nav-btn"
+                            >
+                              ‹
+                            </button>
+                            <button 
+                              onClick={() => setActiveImageIndex((activeImageIndex + 1) % images.length)}
+                              style={{ position: 'absolute', right: '10px', top: '50%', transform: 'translateY(-50%)', background: 'rgba(0,0,0,0.6)', border: '1px solid var(--border-gold)', color: 'var(--color-gold)', width: '36px', height: '36px', borderRadius: '50%', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '1.2rem', transition: 'var(--transition-smooth)', zIndex: 5 }}
+                              className="slider-nav-btn"
+                            >
+                              ›
+                            </button>
+                          </>
+                        )}
+                      </div>
+                      
+                      {images.length > 1 && (
+                        <div className="modal-thumbnails" style={{ display: 'flex', gap: '0.5rem', justifyContent: 'center', flexWrap: 'wrap', overflowX: 'auto', padding: '0.25rem 0' }}>
+                          {images.map((img, idx) => (
+                            <img 
+                              key={idx}
+                              src={img} 
+                              alt={`Thumbnail ${idx + 1}`} 
+                              onClick={() => setActiveImageIndex(idx)}
+                              style={{ 
+                                width: '50px', 
+                                height: '50px', 
+                                objectFit: 'cover', 
+                                borderRadius: '4px', 
+                                border: idx === activeImageIndex ? '2px solid var(--color-gold)' : '1px solid rgba(255,255,255,0.1)', 
+                                cursor: 'pointer',
+                                opacity: idx === activeImageIndex ? 1 : 0.6,
+                                transition: 'var(--transition-smooth)'
+                              }} 
+                            />
+                          ))}
+                        </div>
+                      )}
+                    </div>
+                  );
+                })()}
               </div>
 
               <div className="modal-info-side">

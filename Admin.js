@@ -55,8 +55,9 @@ window.Admin = function Admin() {
   const [loginError, setLoginError] = useState('');
   const [uploading, setUploading] = useState(false);
   const [dragOver, setDragOver] = useState(false);
-  const [previewUrl, setPreviewUrl] = useState(null);
-  const [selectedFile, setSelectedFile] = useState(null);
+  const [selectedFiles, setSelectedFiles] = useState([]);
+  const [previewUrls, setPreviewUrls] = useState([]);
+  const [existingImages, setExistingImages] = useState([]);
 
   const [activeTab, setActiveTab] = useState('upload');
   const [editingProduct, setEditingProduct] = useState(null);
@@ -167,36 +168,41 @@ window.Admin = function Admin() {
     e.preventDefault();
     setDragOver(false);
     if (e.dataTransfer.files && e.dataTransfer.files.length > 0) {
-      const file = e.dataTransfer.files[0];
-      processFile(file);
+      processFiles(Array.from(e.dataTransfer.files));
     }
   };
 
   const handleFileChange = (e) => {
     if (e.target.files && e.target.files.length > 0) {
-      const file = e.target.files[0];
-      processFile(file);
+      processFiles(Array.from(e.target.files));
     }
   };
 
-  const processFile = (file) => {
-    if (!file.type.startsWith('image/')) {
-      alert('Please upload an image file.');
+  const processFiles = (files) => {
+    const imageFiles = files.filter(f => f.type.startsWith('image/'));
+    if (imageFiles.length === 0) {
+      alert('Please select valid image files.');
       return;
     }
-    setSelectedFile(file);
-    const reader = new FileReader();
-    reader.onloadend = () => {
-      setPreviewUrl(reader.result);
-    };
-    reader.readAsDataURL(file);
+    setSelectedFiles(prev => [...prev, ...imageFiles]);
+    imageFiles.forEach(file => {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setPreviewUrls(prev => [...prev, reader.result]);
+      };
+      reader.readAsDataURL(file);
+    });
   };
 
   // Submit product upload / update
   const handleAddProduct = async (e) => {
     e.preventDefault();
-    if (!editingProduct && !selectedFile) {
-      alert('Please select or drag a product photo.');
+    if (!editingProduct && selectedFiles.length === 0) {
+      alert('Please select or drag at least one product photo.');
+      return;
+    }
+    if (editingProduct && existingImages.length === 0 && selectedFiles.length === 0) {
+      alert('Please select or drag at least one product photo.');
       return;
     }
     if (!newProduct.name || !newProduct.price || !newProduct.code) {
@@ -207,12 +213,11 @@ window.Admin = function Admin() {
     try {
       setUploading(true);
 
-      let imageUrl = editingProduct ? editingProduct.image : '';
+      const uploadedUrls = [];
 
-      // Only upload a new image if the user selected a new file
-      if (selectedFile) {
+      // Helper function to upload a single file
+      const uploadImageFile = async (file) => {
         if (isConfigured) {
-          // 1. Upload Direct to Cloudinary (unsigned preset)
           const cloudName = window.CONFIG.cloudinary.cloudName;
           const uploadPreset = window.CONFIG.cloudinary.uploadPreset;
 
@@ -221,7 +226,7 @@ window.Admin = function Admin() {
           }
 
           const formData = new FormData();
-          formData.append('file', selectedFile);
+          formData.append('file', file);
           formData.append('upload_preset', uploadPreset);
 
           const uploadRes = await fetch(`https://api.cloudinary.com/v1_1/${cloudName}/image/upload`, {
@@ -233,12 +238,10 @@ window.Admin = function Admin() {
           if (!uploadRes.ok) {
             throw new Error(uploadData.error?.message || 'Cloudinary image upload failed');
           }
-
-          imageUrl = uploadData.secure_url;
+          return uploadData.secure_url;
         } else {
-          // Local Server Mock fallback mode
           const formData = new FormData();
-          formData.append('image', selectedFile);
+          formData.append('image', file);
 
           const uploadRes = await fetch('/api/upload', {
             method: 'POST',
@@ -248,10 +251,19 @@ window.Admin = function Admin() {
           if (!uploadRes.ok) {
             throw new Error(uploadData.error || 'Mock upload failed');
           }
-
-          imageUrl = uploadData.url;
+          return uploadData.url;
         }
+      };
+
+      // Upload all selected files sequentially
+      for (const file of selectedFiles) {
+        const url = await uploadImageFile(file);
+        uploadedUrls.push(url);
       }
+
+      // Combine remaining existing images with newly uploaded ones
+      const finalImages = [...existingImages, ...uploadedUrls];
+      const mainImage = finalImages[0] || '';
 
       if (isConfigured) {
         if (editingProduct) {
@@ -262,7 +274,8 @@ window.Admin = function Admin() {
             category: newProduct.category,
             price: newProduct.price.toString(),
             description: newProduct.description || '',
-            image: imageUrl
+            image: mainImage,
+            images: finalImages
           });
         } else {
           // 2b. Add new document to Firebase Firestore database
@@ -272,7 +285,8 @@ window.Admin = function Admin() {
             category: newProduct.category,
             price: newProduct.price.toString(),
             description: newProduct.description || '',
-            image: imageUrl,
+            image: mainImage,
+            images: finalImages,
             createdAt: new Date().toISOString()
           });
         }
@@ -284,7 +298,8 @@ window.Admin = function Admin() {
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
               ...newProduct,
-              image: imageUrl
+              image: mainImage,
+              images: finalImages
             })
           });
 
@@ -299,7 +314,8 @@ window.Admin = function Admin() {
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
               ...newProduct,
-              image: imageUrl
+              image: mainImage,
+              images: finalImages
             })
           });
 
@@ -318,8 +334,9 @@ window.Admin = function Admin() {
         category: 'New Arrivals',
         description: ''
       });
-      setSelectedFile(null);
-      setPreviewUrl(null);
+      setSelectedFiles([]);
+      setPreviewUrls([]);
+      setExistingImages([]);
       setEditingProduct(null);
       if (fileInputRef.current) fileInputRef.current.value = '';
       
@@ -344,8 +361,9 @@ window.Admin = function Admin() {
       category: product.category,
       description: product.description || ''
     });
-    setPreviewUrl(product.image);
-    setSelectedFile(null);
+    setExistingImages(Array.isArray(product.images) ? product.images : (product.image ? [product.image] : []));
+    setSelectedFiles([]);
+    setPreviewUrls([]);
     setActiveTab('upload');
   };
 
@@ -533,7 +551,27 @@ window.Admin = function Admin() {
                     </div>
 
                     <div className="form-group">
-                      <label className="form-label">Product Image</label>
+                      <label className="form-label">Product Images</label>
+                      
+                      {/* Previews for existing uploaded images */}
+                      {existingImages.length > 0 && (
+                        <div style={{ display: 'flex', gap: '0.75rem', marginBottom: '1rem', flexWrap: 'wrap' }}>
+                          {existingImages.map((url, idx) => (
+                            <div key={idx} style={{ position: 'relative', width: '80px', height: '80px' }}>
+                              <img src={url} alt="Existing" style={{ width: '100%', height: '100%', objectFit: 'cover', borderRadius: '6px', border: '1px solid var(--border-gold)' }} />
+                              <button 
+                                type="button" 
+                                onClick={() => setExistingImages(existingImages.filter((_, i) => i !== idx))}
+                                style={{ position: 'absolute', top: '-6px', right: '-6px', width: '20px', height: '20px', borderRadius: '50%', background: '#ef4444', color: '#fff', border: 'none', cursor: 'pointer', fontSize: '0.75rem', fontWeight: 'bold', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 10 }}
+                                title="Remove Image"
+                              >
+                                ×
+                              </button>
+                            </div>
+                          ))}
+                        </div>
+                      )}
+
                       <div 
                         className={`file-upload-zone ${dragOver ? 'dragover' : ''}`}
                         onDragOver={handleDragOver}
@@ -547,20 +585,33 @@ window.Admin = function Admin() {
                           onChange={handleFileChange} 
                           style={{ display: 'none' }} 
                           accept="image/*"
+                          multiple
                         />
                         <div className="file-upload-icon"><Icons.Upload /></div>
-                        <p className="file-upload-text">Drag & drop your product photo here or click to browse</p>
-                        
-                        {previewUrl && (
-                          <div className="file-upload-preview" onClick={e => e.stopPropagation()}>
-                            <img src={previewUrl} alt="Preview" />
-                            <div style={{ textAlign: 'left' }}>
-                              <p style={{ fontSize: '0.85rem', color: 'var(--text-primary)', fontWeight: '500' }}>{selectedFile?.name}</p>
-                              <p style={{ fontSize: '0.7rem', color: 'var(--text-secondary)' }}>{(selectedFile?.size / 1024).toFixed(1)} KB</p>
-                            </div>
-                          </div>
-                        )}
+                        <p className="file-upload-text">Drag & drop product photos here or click to browse (Multiple allowed)</p>
                       </div>
+
+                      {/* Previews for newly selected files */}
+                      {previewUrls.length > 0 && (
+                        <div style={{ display: 'flex', gap: '0.75rem', marginTop: '1rem', flexWrap: 'wrap' }}>
+                          {previewUrls.map((url, idx) => (
+                            <div key={idx} style={{ position: 'relative', width: '80px', height: '80px' }}>
+                              <img src={url} alt="New Preview" style={{ width: '100%', height: '100%', objectFit: 'cover', borderRadius: '6px', border: '1px solid var(--border-gold)' }} />
+                              <button 
+                                type="button" 
+                                onClick={() => {
+                                  setSelectedFiles(selectedFiles.filter((_, i) => i !== idx));
+                                  setPreviewUrls(previewUrls.filter((_, i) => i !== idx));
+                                }}
+                                style={{ position: 'absolute', top: '-6px', right: '-6px', width: '20px', height: '20px', borderRadius: '50%', background: '#ef4444', color: '#fff', border: 'none', cursor: 'pointer', fontSize: '0.75rem', fontWeight: 'bold', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 10 }}
+                                title="Remove Preview"
+                              >
+                                ×
+                              </button>
+                            </div>
+                          ))}
+                        </div>
+                      )}
                     </div>
 
                     <button 
@@ -586,8 +637,9 @@ window.Admin = function Admin() {
                             category: 'New Arrivals',
                             description: ''
                           });
-                          setSelectedFile(null);
-                          setPreviewUrl(null);
+                          setSelectedFiles([]);
+                          setPreviewUrls([]);
+                          setExistingImages([]);
                           if (fileInputRef.current) fileInputRef.current.value = '';
                           setActiveTab('view');
                         }}
