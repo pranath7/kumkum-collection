@@ -1406,13 +1406,9 @@ h1, h2, h3, h4 {
 @media (max-width: 600px) {
   .navbar {
     padding: 1.25rem 1rem;
-    flex-direction: column;
-    gap: 1.25rem;
+    justify-content: center;
   }
   .nav-links {
-    gap: 1rem;
-  }
-  .hide-mobile {
     display: none !important;
   }
   .logo-text {
