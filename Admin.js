@@ -47,6 +47,17 @@ if (isConfigured) {
   db = firebase.firestore();
 }
 
+// Helper to detect if a URL refers to a video
+const isVideoUrl = (url) => {
+  if (!url) return false;
+  return url.startsWith('data:video/') || 
+         url.endsWith('.mp4') || 
+         url.endsWith('.webm') || 
+         url.endsWith('.ogg') || 
+         url.endsWith('.mov') || 
+         url.includes('/video/upload/');
+};
+
 // Standalone Admin Portal Component
 window.Admin = function Admin() {
   const [products, setProducts] = useState([]);
@@ -179,13 +190,13 @@ window.Admin = function Admin() {
   };
 
   const processFiles = (files) => {
-    const imageFiles = files.filter(f => f.type.startsWith('image/'));
-    if (imageFiles.length === 0) {
-      alert('Please select valid image files.');
+    const validFiles = files.filter(f => f.type.startsWith('image/') || f.type.startsWith('video/'));
+    if (validFiles.length === 0) {
+      alert('Please select valid image or video files.');
       return;
     }
-    setSelectedFiles(prev => [...prev, ...imageFiles]);
-    imageFiles.forEach(file => {
+    setSelectedFiles(prev => [...prev, ...validFiles]);
+    validFiles.forEach(file => {
       const reader = new FileReader();
       reader.onloadend = () => {
         setPreviewUrls(prev => [...prev, reader.result]);
@@ -229,7 +240,7 @@ window.Admin = function Admin() {
           formData.append('file', file);
           formData.append('upload_preset', uploadPreset);
 
-          const uploadRes = await fetch(`https://api.cloudinary.com/v1_1/${cloudName}/image/upload`, {
+          const uploadRes = await fetch(`https://api.cloudinary.com/v1_1/${cloudName}/auto/upload`, {
             method: 'POST',
             body: formData
           });
@@ -558,7 +569,11 @@ window.Admin = function Admin() {
                         <div style={{ display: 'flex', gap: '0.75rem', marginBottom: '1rem', flexWrap: 'wrap' }}>
                           {existingImages.map((url, idx) => (
                             <div key={idx} style={{ position: 'relative', width: '80px', height: '80px' }}>
-                              <img src={url} alt="Existing" style={{ width: '100%', height: '100%', objectFit: 'cover', borderRadius: '6px', border: '1px solid var(--border-gold)' }} />
+                              {isVideoUrl(url) ? (
+                                <video src={url} style={{ width: '100%', height: '100%', objectFit: 'cover', borderRadius: '6px', border: '1px solid var(--border-gold)' }} muted playsInline />
+                              ) : (
+                                <img src={url} alt="Existing" style={{ width: '100%', height: '100%', objectFit: 'cover', borderRadius: '6px', border: '1px solid var(--border-gold)' }} />
+                              )}
                               <button 
                                 type="button" 
                                 onClick={() => setExistingImages(existingImages.filter((_, i) => i !== idx))}
@@ -584,11 +599,11 @@ window.Admin = function Admin() {
                           ref={fileInputRef} 
                           onChange={handleFileChange} 
                           style={{ display: 'none' }} 
-                          accept="image/*"
+                          accept="image/*,video/*"
                           multiple
                         />
                         <div className="file-upload-icon"><Icons.Upload /></div>
-                        <p className="file-upload-text">Drag & drop product photos here or click to browse (Multiple allowed)</p>
+                        <p className="file-upload-text">Drag & drop product photos or videos here or click to browse (Multiple allowed)</p>
                       </div>
 
                       {/* Previews for newly selected files */}
@@ -596,7 +611,11 @@ window.Admin = function Admin() {
                         <div style={{ display: 'flex', gap: '0.75rem', marginTop: '1rem', flexWrap: 'wrap' }}>
                           {previewUrls.map((url, idx) => (
                             <div key={idx} style={{ position: 'relative', width: '80px', height: '80px' }}>
-                              <img src={url} alt="New Preview" style={{ width: '100%', height: '100%', objectFit: 'cover', borderRadius: '6px', border: '1px solid var(--border-gold)' }} />
+                              {isVideoUrl(url) ? (
+                                <video src={url} style={{ width: '100%', height: '100%', objectFit: 'cover', borderRadius: '6px', border: '1px solid var(--border-gold)' }} muted playsInline />
+                              ) : (
+                                <img src={url} alt="New Preview" style={{ width: '100%', height: '100%', objectFit: 'cover', borderRadius: '6px', border: '1px solid var(--border-gold)' }} />
+                              )}
                               <button 
                                 type="button" 
                                 onClick={() => {
@@ -660,7 +679,11 @@ window.Admin = function Admin() {
                     ) : (
                       products.map(product => (
                         <div className="admin-product-item" key={product.id}>
-                          <img src={product.image} alt={product.name} className="admin-product-thumb" />
+                          {isVideoUrl(product.image) ? (
+                            <video src={product.image} className="admin-product-thumb" style={{ objectFit: 'cover' }} muted playsInline />
+                          ) : (
+                            <img src={product.image} alt={product.name} className="admin-product-thumb" />
+                          )}
                           <div className="admin-product-details">
                             <h4 className="admin-product-name">{product.name}</h4>
                             <div className="admin-product-meta">

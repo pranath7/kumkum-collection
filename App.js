@@ -51,6 +51,17 @@ if (isConfigured) {
   db = firebase.firestore();
 }
 
+// Helper to detect if a URL refers to a video
+const isVideoUrl = (url) => {
+  if (!url) return false;
+  return url.startsWith('data:video/') || 
+         url.endsWith('.mp4') || 
+         url.endsWith('.webm') || 
+         url.endsWith('.ogg') || 
+         url.endsWith('.mov') || 
+         url.includes('/video/upload/');
+};
+
 // Main App Component
 window.App = function App() {
   const [products, setProducts] = useState([]);
@@ -421,12 +432,24 @@ Please let me know if it is available!`;
                     className="product-image-container"
                     onClick={() => setSelectedProduct(product)}
                   >
-                    <img 
-                      src={product.image} 
-                      alt={product.name} 
-                      className="product-image"
-                      loading="lazy"
-                    />
+                    {isVideoUrl(product.image) ? (
+                      <video 
+                        src={product.image} 
+                        className="product-image"
+                        muted 
+                        playsInline 
+                        loop 
+                        autoPlay 
+                        style={{ objectFit: 'cover' }}
+                      />
+                    ) : (
+                      <img 
+                        src={product.image} 
+                        alt={product.name} 
+                        className="product-image"
+                        loading="lazy"
+                      />
+                    )}
                     <div className="product-badge">{product.category}</div>
                   </div>
 
@@ -625,7 +648,11 @@ Please let me know if it is available!`;
                   return (
                     <div className="modal-slider-container" style={{ position: 'relative', width: '100%', display: 'flex', flexDirection: 'column', gap: '1rem' }}>
                       <div className="modal-main-image-wrapper" style={{ position: 'relative', width: '100%', height: '360px', display: 'flex', alignItems: 'center', justifyContent: 'center', background: '#000', borderRadius: '8px', overflow: 'hidden' }}>
-                        <img src={currentImage} alt={selectedProduct.name} style={{ width: '100%', height: '100%', objectFit: 'contain' }} />
+                        {isVideoUrl(currentImage) ? (
+                          <video src={currentImage} controls autoPlay style={{ width: '100%', height: '100%', objectFit: 'contain' }} />
+                        ) : (
+                          <img src={currentImage} alt={selectedProduct.name} style={{ width: '100%', height: '100%', objectFit: 'contain' }} />
+                        )}
                         
                         {images.length > 1 && (
                           <>
@@ -650,22 +677,34 @@ Please let me know if it is available!`;
                       {images.length > 1 && (
                         <div className="modal-thumbnails" style={{ display: 'flex', gap: '0.5rem', justifyContent: 'center', flexWrap: 'wrap', overflowX: 'auto', padding: '0.25rem 0' }}>
                           {images.map((img, idx) => (
-                            <img 
+                            <div 
                               key={idx}
-                              src={img} 
-                              alt={`Thumbnail ${idx + 1}`} 
                               onClick={() => setActiveImageIndex(idx)}
                               style={{ 
+                                position: 'relative',
                                 width: '50px', 
                                 height: '50px', 
-                                objectFit: 'cover', 
                                 borderRadius: '4px', 
                                 border: idx === activeImageIndex ? '2px solid var(--color-gold)' : '1px solid rgba(255,255,255,0.1)', 
                                 cursor: 'pointer',
                                 opacity: idx === activeImageIndex ? 1 : 0.6,
+                                overflow: 'hidden',
+                                background: '#000',
+                                display: 'flex',
+                                alignItems: 'center',
+                                justifyContent: 'center',
                                 transition: 'var(--transition-smooth)'
-                              }} 
-                            />
+                              }}
+                            >
+                              {isVideoUrl(img) ? (
+                                <>
+                                  <video src={img} style={{ width: '100%', height: '100%', objectFit: 'cover' }} muted playsInline />
+                                  <div style={{ position: 'absolute', color: 'var(--color-gold)', fontSize: '0.8rem', textShadow: '0 0 4px #000', pointerEvents: 'none' }}>▶</div>
+                                </>
+                              ) : (
+                                <img src={img} alt={`Thumbnail ${idx + 1}`} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                              )}
+                            </div>
                           ))}
                         </div>
                       )}

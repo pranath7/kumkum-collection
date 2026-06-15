@@ -27,7 +27,11 @@ const MIME_TYPES = {
   '.jpeg': 'image/jpeg',
   '.gif': 'image/gif',
   '.svg': 'image/svg+xml',
-  '.ico': 'image/x-icon'
+  '.ico': 'image/x-icon',
+  '.mp4': 'video/mp4',
+  '.webm': 'video/webm',
+  '.ogg': 'video/ogg',
+  '.mov': 'video/quicktime'
 };
 
 // Helper: Parse multipart/form-data requests
@@ -184,21 +188,21 @@ const server = http.createServer((req, res) => {
       return;
     }
 
-    // POST /api/upload (Multipart image upload)
+    // POST /api/upload (Multipart media upload)
     if (req.method === 'POST' && pathname === '/api/upload') {
       parseMultipart(req)
         .then(result => {
           const imageFile = result.files.image;
           if (!imageFile) {
             res.writeHead(400);
-            res.end(JSON.stringify({ error: 'No image file uploaded' }));
+            res.end(JSON.stringify({ error: 'No media file uploaded' }));
             return;
           }
 
           const ext = path.extname(imageFile.filename).toLowerCase() || '.png';
-          if (!['.jpg', '.jpeg', '.png', '.webp', '.gif'].includes(ext)) {
+          if (!['.jpg', '.jpeg', '.png', '.webp', '.gif', '.mp4', '.webm', '.ogg', '.mov'].includes(ext)) {
             res.writeHead(400);
-            res.end(JSON.stringify({ error: 'Invalid image type. Allowed: jpg, jpeg, png, webp, gif' }));
+            res.end(JSON.stringify({ error: 'Invalid media type. Allowed: jpg, jpeg, png, webp, gif, mp4, webm, ogg, mov' }));
             return;
           }
 
