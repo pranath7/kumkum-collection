@@ -115,7 +115,7 @@ window.App = function App() {
                 category: "New Arrivals",
                 price: "3499",
                 description: "Exquisite luxury Kundan choker necklace adorned with radiant ruby emerald stones and detailed pearl drop hanging strings. Includes a pair of matching royal jhumka earrings. Perfect for bridal and wedding wear.",
-                image: "/images/kundan_necklace.png",
+                image: "./images/kundan_necklace.png",
                 createdAt: new Date(Date.now() - 5000).toISOString()
               },
               {
@@ -124,7 +124,7 @@ window.App = function App() {
                 category: "Premium Combos",
                 price: "4999",
                 description: "Grand traditional South Indian wedding combo set featuring a long royal haram necklace, a matching medium choker necklace, matching grand jhumka earrings, and a maang tikka. Beautiful premium matte gold finishing.",
-                image: "/images/bridal_combo.png",
+                image: "./images/bridal_combo.png",
                 createdAt: new Date(Date.now() - 4000).toISOString()
               },
               {
@@ -133,7 +133,7 @@ window.App = function App() {
                 category: "Trending",
                 price: "1899",
                 description: "Stunning premium quality American Diamond (AD) stone choker necklace featuring royal ruby red center stones, crafted on a brilliant silver-plated base. Comes with matching sparkling stud earrings.",
-                image: "/images/ruby_choker.png",
+                image: "./images/ruby_choker.png",
                 createdAt: new Date(Date.now() - 3000).toISOString()
               },
               {
@@ -142,7 +142,7 @@ window.App = function App() {
                 category: "Hot Sellers",
                 price: "1299",
                 description: "Set of four royal antique gold plated bangles with exquisite handcrafted filigree details, accented with small ruby and emerald green stone placements. Ideal for pairing with sarees and ethnic wear.",
-                image: "/images/antique_bangles.png",
+                image: "./images/antique_bangles.png",
                 createdAt: new Date(Date.now() - 2000).toISOString()
               },
               {
@@ -151,7 +151,7 @@ window.App = function App() {
                 category: "Trending",
                 price: "899",
                 description: "Sparkling contemporary American Diamond (AD) jhumka earrings featuring royal pearl drop embellishments. Designed to capture and reflect light at every angle, adding premium brilliance to your look.",
-                image: "/images/ad_earrings.png",
+                image: "./images/ad_earrings.png",
                 createdAt: new Date(Date.now() - 1000).toISOString()
               }
             ];
@@ -221,7 +221,7 @@ ${imgUrl}`;
       <header className="header" style={{ top: isConfigured ? 0 : '30px' }}>
         <nav className="navbar">
           <div className="logo-container" onClick={() => { setCategoryFilter('All'); window.scrollTo({ top: 0, behavior: 'smooth' }); }} style={{ cursor: 'pointer' }}>
-            <img src="/images/logo.jpg" alt="Kumkum Collection Logo" className="logo-img" />
+            <img src="./images/logo.jpg" alt="Kumkum Collection Logo" className="logo-img" />
             <div>
               <span className="logo-text">KUMKUM</span>
               <div className="logo-subtext">COLLECTION</div>
@@ -657,7 +657,7 @@ ${imgUrl}`;
         <div className="footer-container">
           <div className="footer-brand">
             <div className="logo-container" style={{ marginBottom: '1.25rem' }}>
-              <img src="/images/logo.jpg" alt="Kumkum Collection Logo" className="logo-img" />
+              <img src="./images/logo.jpg" alt="Kumkum Collection Logo" className="logo-img" />
               <div>
                 <span className="logo-text">KUMKUM</span>
                 <div className="logo-subtext">COLLECTION</div>

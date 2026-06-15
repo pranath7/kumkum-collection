@@ -389,8 +389,8 @@ window.Admin = function Admin() {
       {/* Translucent Glassmorphic Header */}
       <header className="header" style={{ top: isConfigured ? 0 : '30px' }}>
         <nav className="navbar">
-          <div className="logo-container" onClick={() => window.location.href = '/'} style={{ cursor: 'pointer' }}>
-            <img src="/images/logo.jpg" alt="Kumkum Collection Logo" className="logo-img" />
+          <div className="logo-container" onClick={() => window.location.href = './index.html'} style={{ cursor: 'pointer' }}>
+            <img src="./images/logo.jpg" alt="Kumkum Collection Logo" className="logo-img" />
             <div>
               <span className="logo-text">KUMKUM</span>
               <div className="logo-subtext">COLLECTION</div>
@@ -402,7 +402,7 @@ window.Admin = function Admin() {
               <span className="nav-link active">Admin Panel</span>
             </li>
             <li>
-              <a href="/" className="nav-link">View Main Site</a>
+              <a href="./index.html" className="nav-link">View Main Site</a>
             </li>
           </ul>
         </nav>
@@ -651,7 +651,7 @@ window.Admin = function Admin() {
         <div className="footer-bottom" style={{ border: 'none', paddingTop: 0 }}>
           <p>&copy; 2026 Kumkum Collection. Admin Portal.</p>
           <div className="footer-bottom-links">
-            <a href="/">Main Website</a>
+            <a href="./index.html">Main Website</a>
           </div>
         </div>
       </footer>
