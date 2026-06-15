@@ -178,7 +178,6 @@ window.App = function App() {
 
   // WhatsApp Order URL Builder
   const getWhatsAppLink = (product) => {
-    const imgUrl = product.image.startsWith('http') ? product.image : `${window.location.origin}${product.image}`;
     const priceText = product.price && product.price !== "0" && product.price !== "" ? `₹${product.price}` : 'Price on Request';
     const message = `Hi Kumkum Collection, I am interested in ordering:
 
@@ -186,8 +185,7 @@ window.App = function App() {
 *Code:* ${product.code}
 *Price:* ${priceText}
 
-Please let me know if it is available!
-${imgUrl}`;
+Please let me know if it is available!`;
     return `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(message)}`;
   };
 
