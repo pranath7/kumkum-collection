@@ -390,7 +390,7 @@ window.Admin = function Admin() {
       <header className="header" style={{ top: isConfigured ? 0 : '30px' }}>
         <nav className="navbar">
           <div className="logo-container" onClick={() => window.location.href = './index.html'} style={{ cursor: 'pointer' }}>
-            <img src="./images/logo.jpg" alt="Kumkum Collection Logo" className="logo-img" />
+            <img src="./public/images/logo.jpg" alt="Kumkum Collection Logo" className="logo-img" />
             <div>
               <span className="logo-text">KUMKUM</span>
               <div className="logo-subtext">COLLECTION</div>
