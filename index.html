@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Kumkum Collection | Premium Imitation Jewellery Chennai</title>
+  <meta name="description" content="Discover premium quality imitation jewellery at Kumkum Collection, Chennai. Explore bridal necklaces, combos, bangles, and AD stone ornaments. Order easily via WhatsApp.">
+  
+  <!-- Favicon -->
+  <link rel="icon" type="image/x-icon" href="/images/ad_earrings.png">
+
+  <!-- Google Fonts: Cormorant Garamond (luxury serif) & Montserrat (modern clean body) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&family=Montserrat:wght@200;300;400;500;600;700&display=swap" rel="stylesheet">
+
+  <!-- Custom Premium Vanilla CSS -->
+  <link rel="stylesheet" href="./index.css">
+
+  <!-- Load Cloud Config Credentials -->
+  <script src="./config.js"></script>
+
+  <!-- React & Babel CDNs -->
+  <script src="https://unpkg.com/react@18.3.1/umd/react.production.min.js" crossorigin></script>
+  <script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.production.min.js" crossorigin></script>
+  <script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" crossorigin></script>
+
+  <!-- Google Firebase Compat CDNs -->
+  <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
+
+  <!-- Error Console Utility -->
+  <div id="error-console" style="display: none; position: fixed; bottom: 20px; left: 20px; right: 20px; background: rgba(220, 38, 38, 0.95); color: white; padding: 20px; border-radius: 12px; font-family: monospace; font-size: 14px; z-index: 99999; box-shadow: 0 10px 25px rgba(0,0,0,0.5); border: 1px solid #ef4444;">
+    <h4 style="margin: 0 0 10px 0; font-weight: bold; border-bottom: 1px solid rgba(255,255,255,0.2); padding-bottom: 5px;">⚠️ Website Runtime Error</h4>
+    <pre id="error-message" style="margin: 0; white-space: pre-wrap; word-break: break-all;"></pre>
+  </div>
+  <script>
+    window.addEventListener('error', function(event) {
+      const consoleEl = document.getElementById('error-console');
+      const messageEl = document.getElementById('error-message');
+      if (consoleEl && messageEl) {
+        consoleEl.style.display = 'block';
+        messageEl.textContent += (messageEl.textContent ? '\n' : '') + 
+          event.message + ' at ' + event.filename + ':' + event.lineno + ':' + event.colno;
+      }
+    });
+    window.addEventListener('unhandledrejection', function(event) {
+      const consoleEl = document.getElementById('error-console');
+      const messageEl = document.getElementById('error-message');
+      if (consoleEl && messageEl) {
+        consoleEl.style.display = 'block';
+        messageEl.textContent += (messageEl.textContent ? '\n' : '') + 
+          'Unhandled Promise Rejection: ' + event.reason;
+      }
+    });
+  </script>
+</head>
+<body>
+  <!-- Root React Mounting Target -->
+  <div id="root"></div>
+
+  <!-- Load React Components via Babel Compilation -->
+  <script type="text/babel" src="./App.js"></script>
+  <script type="text/babel">
+    function mount() {
+      if (window.App) {
+        const root = ReactDOM.createRoot(document.getElementById('root'));
+        root.render(React.createElement(window.App));
+      } else {
+        setTimeout(mount, 50);
+      }
+    }
+    mount();
+  </script>
+</body>
+</html>
