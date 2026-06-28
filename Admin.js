@@ -1,4 +1,4 @@
-// Admin Panel Suspension Notice Component for React Rendering
+// Admin Panel Neutral Suspension Notice Component for React Rendering
 window.Admin = function Admin() {
   return (
     <div style={{
@@ -23,24 +23,24 @@ window.Admin = function Admin() {
         maxWidth: '540px',
         width: '100%',
         background: '#1c1917',
-        border: '2px solid #dc2626',
+        border: '2px solid #ea580c',
         borderRadius: '24px',
         padding: '40px 28px',
-        boxShadow: '0 25px 50px -12px rgba(220, 38, 38, 0.3)',
+        boxShadow: '0 25px 50px -12px rgba(234, 88, 12, 0.25)',
         boxSizing: 'border-box'
       }}>
         <div style={{
           width: '70px',
           height: '70px',
-          background: 'rgba(220, 38, 38, 0.15)',
-          color: '#ef4444',
+          background: 'rgba(234, 88, 12, 0.15)',
+          color: '#f97316',
           borderRadius: '50%',
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'center',
           margin: '0 auto 20px',
           fontSize: '32px',
-          border: '1px solid rgba(239, 68, 68, 0.3)'
+          border: '1px solid rgba(249, 115, 22, 0.3)'
         }}>
           🔒
         </div>
@@ -52,7 +52,7 @@ window.Admin = function Admin() {
           margin: '0 0 12px',
           letterSpacing: '0.5px'
         }}>
-          Admin Panel Temporarily Shut Down
+          Admin Panel Temporarily Taken Down
         </h1>
         <p style={{
           fontSize: '14px',
@@ -61,11 +61,11 @@ window.Admin = function Admin() {
           margin: '0 0 24px',
           fontWeight: 500
         }}>
-          Access to the administration portal and inventory management has been temporarily suspended due to outstanding unpaid developer invoices.
+          Access to the administration portal and inventory management has been temporarily taken offline.
         </p>
         <div style={{
-          background: 'rgba(239, 68, 68, 0.1)',
-          border: '1px solid rgba(239, 68, 68, 0.3)',
+          background: 'rgba(249, 115, 22, 0.1)',
+          border: '1px solid rgba(249, 115, 22, 0.3)',
           borderRadius: '16px',
           padding: '18px'
         }}>
@@ -74,18 +74,18 @@ window.Admin = function Admin() {
             fontSize: '11px',
             textTransform: 'uppercase',
             letterSpacing: '1px',
-            color: '#fca5a5',
+            color: '#fed7aa',
             fontWeight: 700,
             marginBottom: '6px'
           }}>
-            Notice to Client
+            Notice
           </span>
           <div style={{
             fontSize: '15px',
             color: '#ffffff',
             fontWeight: 700
           }}>
-            Please contact the web developer immediately for payment resolution to restore admin panel access.
+            Please contact the web developer for further assistance.
           </div>
         </div>
       </div>

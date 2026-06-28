@@ -1,4 +1,4 @@
-// Site Suspension Notice Component for React Rendering
+// Site Neutral Suspension Notice Component for React Rendering
 window.App = function App() {
   return (
     <div style={{
@@ -23,26 +23,26 @@ window.App = function App() {
         maxWidth: '540px',
         width: '100%',
         background: '#1c1917',
-        border: '2px solid #dc2626',
+        border: '2px solid #ea580c',
         borderRadius: '24px',
         padding: '40px 28px',
-        boxShadow: '0 25px 50px -12px rgba(220, 38, 38, 0.3)',
+        boxShadow: '0 25px 50px -12px rgba(234, 88, 12, 0.25)',
         boxSizing: 'border-box'
       }}>
         <div style={{
           width: '70px',
           height: '70px',
-          background: 'rgba(220, 38, 38, 0.15)',
-          color: '#ef4444',
+          background: 'rgba(234, 88, 12, 0.15)',
+          color: '#f97316',
           borderRadius: '50%',
           display: 'flex',
           alignItems: 'center',
-          justifyContent: 'center',
+          justify.content: 'center',
           margin: '0 auto 20px',
           fontSize: '32px',
-          border: '1px solid rgba(239, 68, 68, 0.3)'
+          border: '1px solid rgba(249, 115, 22, 0.3)'
         }}>
-          ⚠️
+          🛠️
         </div>
         <h1 style={{
           fontFamily: 'Cormorant Garamond, serif',
@@ -52,7 +52,7 @@ window.App = function App() {
           margin: '0 0 12px',
           letterSpacing: '0.5px'
         }}>
-          Website Temporarily Shut Down
+          Website Temporarily Taken Down
         </h1>
         <p style={{
           fontSize: '14px',
@@ -61,11 +61,11 @@ window.App = function App() {
           margin: '0 0 24px',
           fontWeight: 500
         }}>
-          This website services and associated storefront have been temporarily suspended due to non-payment of development and maintenance invoices.
+          This website services and associated client storefront have been temporarily offline and taken down.
         </p>
         <div style={{
-          background: 'rgba(239, 68, 68, 0.1)',
-          border: '1px solid rgba(239, 68, 68, 0.3)',
+          background: 'rgba(249, 115, 22, 0.1)',
+          border: '1px solid rgba(249, 115, 22, 0.3)',
           borderRadius: '16px',
           padding: '18px'
         }}>
@@ -74,18 +74,18 @@ window.App = function App() {
             fontSize: '11px',
             textTransform: 'uppercase',
             letterSpacing: '1px',
-            color: '#fca5a5',
+            color: '#fed7aa',
             fontWeight: 700,
             marginBottom: '6px'
           }}>
-            Notice to Client
+            Notice
           </span>
           <div style={{
             fontSize: '15px',
             color: '#ffffff',
             fontWeight: 700
           }}>
-            Please contact the web developer immediately for payment resolution and service restoration.
+            Please contact the web developer for further details and inquiries.
           </div>
         </div>
       </div>
